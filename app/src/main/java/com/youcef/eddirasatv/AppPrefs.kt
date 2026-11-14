@@ -10,6 +10,7 @@ object AppPrefs {
     private const val KEY_FAVORITES = "favorites"
     private const val KEY_TEXT_ZOOM = "text_zoom"
     private const val KEY_SEARCHES = "searches"
+    private const val KEY_PDF_RTL = "pdf_rtl"
     private const val MAX_RECENT = 5
     private const val MAX_FAVORITES = 20
     private const val MAX_SEARCHES = 10
@@ -55,6 +56,12 @@ object AppPrefs {
         val array = JSONArray()
         items.take(MAX_SEARCHES).forEach { array.put(it) }
         prefs(context).edit().putString(KEY_SEARCHES, array.toString()).apply()
+    }
+
+    fun pdfRtl(context: Context): Boolean = prefs(context).getBoolean(KEY_PDF_RTL, true)
+
+    fun setPdfRtl(context: Context, value: Boolean) {
+        prefs(context).edit().putBoolean(KEY_PDF_RTL, value).apply()
     }
 
     fun addRecent(context: Context, url: String, title: String) {

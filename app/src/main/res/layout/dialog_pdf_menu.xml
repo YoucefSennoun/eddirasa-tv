@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_bg"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layoutDirection="rtl">
+
+    <TextView
+        android:id="@+id/pdfMenuZoom"
+        style="@style/MenuItem"
+        android:text="@string/menu_pdf_zoom" />
+
+    <TextView
+        android:id="@+id/pdfMenuDirection"
+        style="@style/MenuItem"
+        android:text="@string/menu_pdf_direction_rtl" />
+
+    <TextView
+        android:id="@+id/pdfMenuJump"
+        style="@style/MenuItem"
+        android:text="@string/menu_pdf_jump" />
+
+    <TextView
+        android:id="@+id/pdfMenuClose"
+        style="@style/MenuItem"
+        android:text="@string/menu_close" />
+
+</LinearLayout>
