@@ -64,6 +64,13 @@ Never commit the keystore or its passwords.
 The app only loads the public website. It does not copy, scrape, or re-host content,
 and it keeps the website's ads working.
 
+## WebView note
+
+The app renders the site with the device's system WebView. On an old Android 10
+box the preinstalled WebView build may be outdated and the site layout can look
+broken; updating "Android System WebView" (or installing a current WebView APK)
+fixes it. The app itself needs no update.
+
 ## Roadmap
 
 Development follows [roadmap.md](roadmap.md).

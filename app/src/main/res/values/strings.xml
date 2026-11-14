@@ -10,6 +10,8 @@
     <string name="empty_favorites">لا توجد مفضلة بعد</string>
     <string name="error_title">تعذر تحميل الصفحة</string>
     <string name="error_message">تحقق من اتصال الإنترنت ثم حاول مرة أخرى.</string>
+    <string name="error_ssl">تعذر إنشاء اتصال آمن بالموقع.</string>
+    <string name="page_recovered">تمت استعادة الصفحة</string>
     <string name="retry">إعادة المحاولة</string>
     <string name="external_link_blocked">رابط خارجي غير مدعوم</string>
     <string name="menu_title">القائمة</string>

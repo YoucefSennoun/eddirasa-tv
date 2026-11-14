@@ -8,6 +8,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
+import android.net.http.SslError
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -19,6 +20,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.CookieManager
+import android.webkit.RenderProcessGoneDetail
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
@@ -43,9 +45,11 @@ class BrowserActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var errorOverlay: View
     private lateinit var retryButton: TextView
+    private lateinit var errorMessage: TextView
     private lateinit var cursorView: CursorView
 
     private var failedUrl: String? = null
+    private var lastUrl: String? = null
 
     private var downloading = false
     private var downloadCancelled = false
@@ -86,9 +90,10 @@ class BrowserActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
         errorOverlay = findViewById(R.id.errorOverlay)
         retryButton = findViewById(R.id.retryButton)
+        errorMessage = findViewById(R.id.errorMessage)
         cursorView = findViewById(R.id.cursorView)
 
-        configureWebView()
+        configureWebView(webView)
 
         retryButton.setOnClickListener {
             hideError()
@@ -110,9 +115,9 @@ class BrowserActivity : AppCompatActivity() {
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    private fun configureWebView() {
-        webView.setBackgroundColor(ContextCompat.getColor(this, R.color.background_dark))
-        webView.settings.apply {
+    private fun configureWebView(target: WebView) {
+        target.setBackgroundColor(ContextCompat.getColor(this, R.color.background_dark))
+        target.settings.apply {
             javaScriptEnabled = true
             domStorageEnabled = true
             setSupportZoom(true)
@@ -127,7 +132,7 @@ class BrowserActivity : AppCompatActivity() {
             allowContentAccess = false
         }
 
-        webView.webViewClient = object : WebViewClient() {
+        target.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(
                 view: WebView?,
                 request: WebResourceRequest?
@@ -149,6 +154,7 @@ class BrowserActivity : AppCompatActivity() {
 
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
+                if (url != null && url.startsWith("http")) lastUrl = url
                 hideError()
                 progressBar.progress = 0
                 progressBar.visibility = View.VISIBLE
@@ -174,16 +180,37 @@ class BrowserActivity : AppCompatActivity() {
                 if (request?.isForMainFrame == true) {
                     progressBar.visibility = View.GONE
                     failedUrl = request.url.toString()
-                    showError()
+                    showError(R.string.error_message)
                 }
+            }
+
+            override fun onReceivedSslError(
+                view: WebView?,
+                handler: SslErrorHandler?,
+                error: SslError?
+            ) {
+                handler?.cancel()
+                progressBar.visibility = View.GONE
+                failedUrl = error?.url
+                showError(R.string.error_ssl)
+            }
+
+            override fun onRenderProcessGone(
+                view: WebView?,
+                detail: RenderProcessGoneDetail?
+            ): Boolean {
+                if (view == null || isFinishing || isDestroyed) return true
+                val url = lastUrl ?: view.url ?: Sections.BASE_URL
+                rebuildWebView(url)
+                return true
             }
         }
 
-        webView.setDownloadListener { url, _, contentDisposition, mimeType, contentLength ->
+        target.setDownloadListener { url, _, contentDisposition, mimeType, contentLength ->
             handleDownload(url, contentDisposition, mimeType, contentLength)
         }
 
-        webView.webChromeClient = object : WebChromeClient() {
+        target.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
                 progressBar.progress = newProgress
@@ -421,11 +448,59 @@ class BrowserActivity : AppCompatActivity() {
         Toast.makeText(this, R.string.external_link_blocked, Toast.LENGTH_SHORT).show()
     }
 
-    private fun showError() {
+    private fun showError(messageRes: Int) {
         stopMove()
         cursorView.visibility = View.INVISIBLE
         errorOverlay.visibility = View.VISIBLE
+        errorMessage.setText(messageRes)
         retryButton.requestFocus()
+    }
+
+    private fun rebuildWebView(url: String) {
+        stopMove()
+        handler.removeCallbacksAndMessages(null)
+        val old = webView
+        (old.parent as? ViewGroup)?.removeView(old)
+        old.stopLoading()
+        old.webChromeClient = null
+        old.webViewClient = WebViewClient()
+        try {
+            old.destroy()
+        } catch (ignored: Exception) {
+        }
+
+        val root = findViewById<ViewGroup>(R.id.browserRoot)
+        val fresh = WebView(this)
+        fresh.layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
+        root.addView(fresh, 0)
+        webView = fresh
+        configureWebView(fresh)
+        fresh.loadUrl(url)
+        fresh.requestFocus()
+        showCursor()
+        Toast.makeText(this, R.string.page_recovered, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun trimWebViewCacheIfNeeded() {
+        if (isFinishing) return
+        try {
+            val targets = listOf(
+                File(cacheDir, "WebView"),
+                File(File(applicationInfo.dataDir, "app_webview"), "Default/HTTP Cache")
+            )
+            val total = targets.sumOf { directorySize(it) }
+            if (total > MAX_WEBVIEW_CACHE_BYTES) webView.clearCache(true)
+        } catch (ignored: Exception) {
+        }
+    }
+
+    private fun directorySize(file: File): Long {
+        if (!file.exists()) return 0L
+        if (file.isFile) return file.length()
+        return file.listFiles()?.sumOf { directorySize(it) } ?: 0L
     }
 
     private fun hideError() {
@@ -706,6 +781,7 @@ class BrowserActivity : AppCompatActivity() {
     override fun onPause() {
         stopMove()
         webView.onPause()
+        trimWebViewCacheIfNeeded()
         super.onPause()
     }
 
@@ -730,6 +806,7 @@ class BrowserActivity : AppCompatActivity() {
 
     companion object {
         private const val MAX_PDF_CACHE_BYTES = 150L * 1024L * 1024L
+        private const val MAX_WEBVIEW_CACHE_BYTES = 100L * 1024L * 1024L
         private const val EXTRA_URL = "extra_url"
         private const val EXTRA_TITLE = "extra_title"
 
