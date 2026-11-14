@@ -8,7 +8,17 @@
     <string name="home_hint">استخدم أسهم الريموت للتنقل، و OK للفتح</string>
     <string name="empty_recent">لا يوجد سجل بعد</string>
     <string name="empty_favorites">لا توجد مفضلة بعد</string>
-    <string name="browser_stub_hint">المتصفح قادم في المرحلة التالية</string>
+    <string name="error_title">تعذر تحميل الصفحة</string>
+    <string name="error_message">تحقق من اتصال الإنترنت ثم حاول مرة أخرى.</string>
+    <string name="retry">إعادة المحاولة</string>
+    <string name="external_link_blocked">رابط خارجي غير مدعوم</string>
+    <string name="menu_title">القائمة</string>
+    <string name="menu_zoom_in">تكبير النص</string>
+    <string name="menu_zoom_out">تصغير النص</string>
+    <string name="menu_zoom_reset">إعادة ضبط حجم النص</string>
+    <string name="menu_reload">إعادة التحميل</string>
+    <string name="menu_home">الرئيسية</string>
+    <string name="menu_zoom_value">حجم النص: %1$d%%</string>
 
     <string name="section_primary">التعليم الابتدائي</string>
     <string name="section_middle">التعليم المتوسط</string>

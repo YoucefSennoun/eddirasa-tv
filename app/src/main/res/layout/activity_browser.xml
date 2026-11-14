@@ -2,43 +2,72 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_dark"
-    android:layoutDirection="rtl">
+    android:background="@color/background_dark">
+
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_dark" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_gravity="top"
+        android:layoutDirection="ltr"
+        android:max="100"
+        android:progressTint="@color/brand_green"
+        android:visibility="gone" />
 
     <LinearLayout
+        android:id="@+id/errorOverlay"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_height="match_parent"
+        android:background="@color/background_dark"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="32dp">
+        android:padding="40dp"
+        android:visibility="gone"
+        android:layoutDirection="rtl">
 
         <TextView
-            android:id="@+id/browserTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:text="@string/error_title"
             android:textColor="@color/text_light"
             android:textSize="34sp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/browserUrl"
+            android:id="@+id/errorMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:gravity="center"
+            android:text="@string/error_message"
             android:textColor="@color/text_secondary"
             android:textSize="22sp" />
 
         <TextView
+            android:id="@+id/retryButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:gravity="center"
-            android:text="@string/browser_stub_hint"
-            android:textColor="@color/brand_green"
-            android:textSize="22sp" />
+            android:layout_marginTop="28dp"
+            android:background="@drawable/chip_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            android:paddingStart="36dp"
+            android:paddingTop="16dp"
+            android:paddingEnd="36dp"
+            android:paddingBottom="16dp"
+            android:text="@string/retry"
+            android:textColor="@color/text_light"
+            android:textSize="26sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 

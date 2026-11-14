@@ -8,8 +8,13 @@ object AppPrefs {
     private const val PREFS = "eddirasa_prefs"
     private const val KEY_RECENT = "recent"
     private const val KEY_FAVORITES = "favorites"
+    private const val KEY_TEXT_ZOOM = "text_zoom"
     private const val MAX_RECENT = 5
     private const val MAX_FAVORITES = 20
+
+    const val DEFAULT_TEXT_ZOOM = 135
+    const val MIN_TEXT_ZOOM = 80
+    const val MAX_TEXT_ZOOM = 200
 
     data class Entry(val url: String, val title: String)
 
@@ -19,6 +24,16 @@ object AppPrefs {
     fun recent(context: Context): List<Entry> = read(context, KEY_RECENT)
 
     fun favorites(context: Context): List<Entry> = read(context, KEY_FAVORITES)
+
+    fun textZoom(context: Context): Int =
+        prefs(context).getInt(KEY_TEXT_ZOOM, DEFAULT_TEXT_ZOOM)
+            .coerceIn(MIN_TEXT_ZOOM, MAX_TEXT_ZOOM)
+
+    fun setTextZoom(context: Context, value: Int) {
+        prefs(context).edit()
+            .putInt(KEY_TEXT_ZOOM, value.coerceIn(MIN_TEXT_ZOOM, MAX_TEXT_ZOOM))
+            .apply()
+    }
 
     fun addRecent(context: Context, url: String, title: String) {
         val items = recent(context).filterNot { it.url == url }.toMutableList()
