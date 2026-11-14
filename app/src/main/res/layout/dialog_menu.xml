@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_bg"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layoutDirection="rtl">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="12dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="8dp"
+        android:text="@string/menu_title"
+        android:textColor="@color/focus_border"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/menuHome"
+        style="@style/MenuItem"
+        android:text="@string/menu_home" />
+
+    <TextView
+        android:id="@+id/menuReload"
+        style="@style/MenuItem"
+        android:text="@string/menu_reload" />
+
+    <TextView
+        android:id="@+id/menuZoomIn"
+        style="@style/MenuItem"
+        android:text="@string/menu_zoom_in" />
+
+    <TextView
+        android:id="@+id/menuZoomOut"
+        style="@style/MenuItem"
+        android:text="@string/menu_zoom_out" />
+
+    <TextView
+        android:id="@+id/menuSearch"
+        style="@style/MenuItem"
+        android:text="@string/menu_search" />
+
+    <TextView
+        android:id="@+id/menuFavorite"
+        style="@style/MenuItem"
+        android:text="@string/menu_add_favorite" />
+
+    <TextView
+        android:id="@+id/menuExit"
+        style="@style/MenuItem"
+        android:text="@string/menu_exit" />
+
+</LinearLayout>

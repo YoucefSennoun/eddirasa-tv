@@ -44,15 +44,19 @@ object AppPrefs {
     fun isFavorite(context: Context, url: String): Boolean =
         favorites(context).any { it.url == url }
 
-    fun toggleFavorite(context: Context, url: String, title: String) {
+    fun toggleFavorite(context: Context, url: String, title: String): Boolean {
         val items = favorites(context).toMutableList()
         val existing = items.firstOrNull { it.url == url }
+        val added: Boolean
         if (existing != null) {
             items.remove(existing)
+            added = false
         } else {
             items.add(0, Entry(url, title))
+            added = true
         }
         write(context, KEY_FAVORITES, items.take(MAX_FAVORITES))
+        return added
     }
 
     private fun read(context: Context, key: String): List<Entry> {
