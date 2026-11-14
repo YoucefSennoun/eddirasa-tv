@@ -13,3 +13,4 @@ app/*.jks
 app/*.keystore
 *.apk
 *.aab
+keys/

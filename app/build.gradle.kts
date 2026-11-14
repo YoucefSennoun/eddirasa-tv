@@ -11,8 +11,8 @@ android {
         applicationId = "com.youcef.eddirasatv"
         minSdk = 24
         targetSdk = 29
-        versionCode = 4
-        versionName = "0.4.0"
+        versionCode = 1
+        versionName = "1.0.0"
     }
 
     signingConfigs {

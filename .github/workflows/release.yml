@@ -55,7 +55,13 @@ jobs:
           tag_name: ${{ inputs.tag }}
           name: "الدراسة TV ${{ inputs.tag }}"
           body: |
-            APK موقّع لتطبيق الدراسة TV.
-            Signed APK build of Eddirasa TV.
+            نسخة التلفاز من موقع الدراسة — تعمل بالريموت فقط.
+
+            **التثبيت:** نزّل `app-release.apk` وثبّته على أندرويد 7 أو أحدث
+            (يفضّل Android TV). شغّل التطبيق واختر قسماً بالريموت.
+
+            Signed TV build of eddirasa.com. Remote-only navigation.
+            **Install:** download `app-release.apk` and sideload it on Android 7+
+            (Android TV recommended).
           files: app/build/outputs/apk/release/app-release.apk
           fail_on_unmatched_files: true
