@@ -1,8 +1,14 @@
 package com.youcef.eddirasatv
 
+import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
@@ -11,6 +17,8 @@ import androidx.core.content.ContextCompat
 
 class HomeActivity : AppCompatActivity() {
 
+    private lateinit var continueBlock: View
+    private lateinit var continueRow: LinearLayout
     private lateinit var recentRow: LinearLayout
     private lateinit var favoritesRow: LinearLayout
     private lateinit var gridContainer: LinearLayout
@@ -27,17 +35,26 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         setContentView(R.layout.activity_home)
 
+        continueBlock = findViewById(R.id.continueBlock)
+        continueRow = findViewById(R.id.continueRow)
         recentRow = findViewById(R.id.recentRow)
         favoritesRow = findViewById(R.id.favoritesRow)
         gridContainer = findViewById(R.id.gridContainer)
 
         buildGrid()
+
+        if (!AppPrefs.helpShown(this)) {
+            AppPrefs.setHelpShown(this)
+            window.decorView.post { UiDialogs.showHelp(this) }
+        }
     }
 
     override fun onResume() {
         super.onResume()
+        refreshContinue()
         refreshRecent()
         refreshFavorites()
         if (currentFocus == null) {
@@ -83,6 +100,77 @@ class HomeActivity : AppCompatActivity() {
 
             gridContainer.addView(row)
         }
+    }
+
+    private fun refreshContinue() {
+        continueRow.removeAllViews()
+        val last = AppPrefs.lastPage(this)
+        if (last == null) {
+            continueBlock.visibility = View.GONE
+            return
+        }
+        continueBlock.visibility = View.VISIBLE
+        val label = last.title.ifBlank { last.url }
+        val tile = layoutInflater.inflate(R.layout.item_tile, continueRow, false)
+        tile.findViewById<TextView>(R.id.tileBadge).text = "▶"
+        tile.findViewById<TextView>(R.id.tileTitle).text = label
+        tile.contentDescription = label
+        tile.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            dp(120)
+        )
+        tile.setOnClickListener { openUrl(last.url, label) }
+        attachFocusEffect(tile)
+        continueRow.addView(tile)
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_MENU && event?.repeatCount == 0) {
+            showHomeMenu()
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onBackPressed() {
+        UiDialogs.confirmExit(this)
+    }
+
+    private fun showHomeMenu() {
+        val dialog = Dialog(this)
+        dialog.setContentView(R.layout.dialog_home_menu)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.setLayout(
+            (resources.displayMetrics.widthPixels * 0.45f).toInt(),
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        val settings = dialog.findViewById<TextView>(R.id.homeMenuSettings)
+        val favorites = dialog.findViewById<TextView>(R.id.homeMenuFavorites)
+        val help = dialog.findViewById<TextView>(R.id.homeMenuHelp)
+
+        settings.setOnClickListener {
+            dialog.dismiss()
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
+        favorites.setOnClickListener {
+            dialog.dismiss()
+            startActivity(Intent(this, FavoritesActivity::class.java))
+        }
+        help.setOnClickListener {
+            dialog.dismiss()
+            UiDialogs.showHelp(this)
+        }
+        dialog.setOnKeyListener { _, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
+                dialog.dismiss()
+                true
+            } else {
+                false
+            }
+        }
+        dialog.show()
+        settings.requestFocus()
     }
 
     private fun refreshRecent() {

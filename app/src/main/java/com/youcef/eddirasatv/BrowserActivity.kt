@@ -19,6 +19,7 @@ import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.webkit.CookieManager
 import android.webkit.RenderProcessGoneDetail
 import android.webkit.SslErrorHandler
@@ -65,8 +66,13 @@ class BrowserActivity : AppCompatActivity() {
         override fun run() {
             if (heldDirection == 0) return
             val elapsed = SystemClock.uptimeMillis() - holdStart
-            val speed = (12f + (elapsed - 300L).coerceAtLeast(0L) / 40f).coerceAtMost(60f)
-            step(heldDirection, speed)
+            val base = (12f + (elapsed - 300L).coerceAtLeast(0L) / 40f).coerceAtMost(60f)
+            val factor = when (AppPrefs.cursorSpeed(this@BrowserActivity)) {
+                0 -> 0.6f
+                2 -> 1.6f
+                else -> 1f
+            }
+            step(heldDirection, base * factor)
             handler.postDelayed(this, 40L)
         }
     }
@@ -85,6 +91,7 @@ class BrowserActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         setContentView(R.layout.activity_browser)
 
         webView = findViewById(R.id.webView)
@@ -169,6 +176,7 @@ class BrowserActivity : AppCompatActivity() {
                 ) {
                     val title = view?.title?.takeIf { it.isNotBlank() } ?: url
                     AppPrefs.addRecent(this@BrowserActivity, url, title)
+                    AppPrefs.setLastPage(this@BrowserActivity, url, title)
                 }
             }
 
@@ -747,6 +755,9 @@ class BrowserActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
+        })
+        dialog.findViewById<TextView>(R.id.menuHelp).setOnClickListener(action {
+            UiDialogs.showHelp(this)
         })
         dialog.findViewById<TextView>(R.id.menuExit).setOnClickListener(action {
             finishAffinity()

@@ -49,6 +49,11 @@
         android:text="@string/menu_add_favorite" />
 
     <TextView
+        android:id="@+id/menuHelp"
+        style="@style/MenuItem"
+        android:text="@string/menu_help" />
+
+    <TextView
         android:id="@+id/menuExit"
         style="@style/MenuItem"
         android:text="@string/menu_exit" />

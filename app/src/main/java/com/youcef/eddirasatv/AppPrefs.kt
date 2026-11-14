@@ -11,11 +11,19 @@ object AppPrefs {
     private const val KEY_TEXT_ZOOM = "text_zoom"
     private const val KEY_SEARCHES = "searches"
     private const val KEY_PDF_RTL = "pdf_rtl"
+    private const val KEY_CURSOR_SPEED = "cursor_speed"
+    private const val KEY_PDF_ZOOM = "pdf_zoom"
+    private const val KEY_LAST_URL = "last_url"
+    private const val KEY_LAST_TITLE = "last_title"
+    private const val KEY_HELP_SHOWN = "help_shown"
     private const val MAX_RECENT = 5
     private const val MAX_FAVORITES = 20
     private const val MAX_SEARCHES = 10
 
     const val DEFAULT_TEXT_ZOOM = 135
+    const val DEFAULT_CURSOR_SPEED = 1
+    const val MIN_CURSOR_SPEED = 0
+    const val MAX_CURSOR_SPEED = 2
     const val MIN_TEXT_ZOOM = 80
     const val MAX_TEXT_ZOOM = 200
 
@@ -62,6 +70,52 @@ object AppPrefs {
 
     fun setPdfRtl(context: Context, value: Boolean) {
         prefs(context).edit().putBoolean(KEY_PDF_RTL, value).apply()
+    }
+
+    fun cursorSpeed(context: Context): Int =
+        prefs(context).getInt(KEY_CURSOR_SPEED, DEFAULT_CURSOR_SPEED)
+            .coerceIn(MIN_CURSOR_SPEED, MAX_CURSOR_SPEED)
+
+    fun setCursorSpeed(context: Context, value: Int) {
+        prefs(context).edit()
+            .putInt(KEY_CURSOR_SPEED, value.coerceIn(MIN_CURSOR_SPEED, MAX_CURSOR_SPEED))
+            .apply()
+    }
+
+    fun pdfZoom(context: Context): Int =
+        prefs(context).getInt(KEY_PDF_ZOOM, 0).coerceIn(0, 2)
+
+    fun setPdfZoom(context: Context, value: Int) {
+        prefs(context).edit().putInt(KEY_PDF_ZOOM, value.coerceIn(0, 2)).apply()
+    }
+
+    fun lastPage(context: Context): Entry? {
+        val url = prefs(context).getString(KEY_LAST_URL, null) ?: return null
+        if (url.isBlank()) return null
+        val title = prefs(context).getString(KEY_LAST_TITLE, null).orEmpty()
+        return Entry(url, title)
+    }
+
+    fun setLastPage(context: Context, url: String, title: String) {
+        prefs(context).edit()
+            .putString(KEY_LAST_URL, url)
+            .putString(KEY_LAST_TITLE, title)
+            .apply()
+    }
+
+    fun clearHistory(context: Context) {
+        prefs(context).edit()
+            .remove(KEY_RECENT)
+            .remove(KEY_SEARCHES)
+            .remove(KEY_LAST_URL)
+            .remove(KEY_LAST_TITLE)
+            .apply()
+    }
+
+    fun helpShown(context: Context): Boolean = prefs(context).getBoolean(KEY_HELP_SHOWN, false)
+
+    fun setHelpShown(context: Context) {
+        prefs(context).edit().putBoolean(KEY_HELP_SHOWN, true).apply()
     }
 
     fun addRecent(context: Context, url: String, title: String) {

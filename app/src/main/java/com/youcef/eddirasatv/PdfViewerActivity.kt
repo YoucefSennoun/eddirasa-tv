@@ -15,6 +15,7 @@ import android.os.HandlerThread
 import android.os.ParcelFileDescriptor
 import android.view.Gravity
 import android.view.KeyEvent
+import android.view.WindowManager
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -48,6 +49,7 @@ class PdfViewerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         setContentView(R.layout.activity_pdf)
 
         pageView = findViewById(R.id.pdfPageView)
@@ -58,6 +60,7 @@ class PdfViewerActivity : AppCompatActivity() {
 
         filePath = intent.getStringExtra(EXTRA_PDF_PATH)
         rtlPages = AppPrefs.pdfRtl(this)
+        zoomLevel = AppPrefs.pdfZoom(this)
 
         renderThread = HandlerThread("pdf-render").also { it.start() }
         renderHandler = Handler(renderThread.looper)
@@ -219,6 +222,7 @@ class PdfViewerActivity : AppCompatActivity() {
     private fun cycleZoom() {
         if (closed || rendering) return
         zoomLevel = (zoomLevel + 1) % ZOOM_LEVELS
+        AppPrefs.setPdfZoom(this, zoomLevel)
         renderPage(pageIndex)
     }
 

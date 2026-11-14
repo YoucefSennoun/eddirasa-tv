@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.view.Gravity
 import android.view.View
+import android.view.WindowManager
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -33,6 +34,7 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         setContentView(R.layout.activity_search)
 
         queryText = findViewById(R.id.queryText)
