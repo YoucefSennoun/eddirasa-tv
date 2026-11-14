@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">الدراسة TV</string>
-    <string name="welcome">مرحبا</string>
+    <string name="home_subtitle">بوابة الدراسة على التلفاز</string>
+    <string name="home_recent">آخر ما زرته</string>
+    <string name="home_favorites">المفضلة</string>
+    <string name="home_sections">الأقسام</string>
+    <string name="home_hint">استخدم أسهم الريموت للتنقل، و OK للفتح</string>
+    <string name="empty_recent">لا يوجد سجل بعد</string>
+    <string name="empty_favorites">لا توجد مفضلة بعد</string>
+    <string name="browser_stub_hint">المتصفح قادم في المرحلة التالية</string>
+
+    <string name="section_primary">التعليم الابتدائي</string>
+    <string name="section_middle">التعليم المتوسط</string>
+    <string name="section_secondary">التعليم الثانوي</string>
+    <string name="section_university">التعليم الجامعي</string>
+    <string name="section_exams">بنك الاختبارات</string>
+    <string name="section_average">حاسبات المعدلات</string>
+    <string name="section_teachers">الأستاذ</string>
+    <string name="section_training">التكوين</string>
+    <string name="section_questions">الأسئلة والأجوبة</string>
+    <string name="section_classrooms">الغرف الدراسية</string>
+    <string name="section_news">أخبار الدراسة</string>
+    <string name="section_search">بحث</string>
 </resources>
