@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 
@@ -14,6 +15,15 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var favoritesRow: LinearLayout
     private lateinit var gridContainer: LinearLayout
     private var firstTile: View? = null
+
+    private val searchLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                result.data?.getStringExtra(SearchActivity.EXTRA_QUERY_URL)?.let { url ->
+                    openUrl(url, getString(R.string.section_search))
+                }
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +68,13 @@ class HomeActivity : AppCompatActivity() {
                 lp.marginEnd = dp(6)
                 tile.layoutParams = lp
 
-                tile.setOnClickListener { openUrl(section.url, title) }
+                tile.setOnClickListener {
+                    if (section.titleRes == R.string.section_search) {
+                        searchLauncher.launch(SearchActivity.intent(this))
+                    } else {
+                        openUrl(section.url, title)
+                    }
+                }
                 attachFocusEffect(tile)
                 row.addView(tile)
 

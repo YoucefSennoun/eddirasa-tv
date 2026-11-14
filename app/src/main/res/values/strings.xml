@@ -24,7 +24,16 @@
     <string name="menu_zoom_value">حجم النص: %1$d%%</string>
     <string name="favorite_added">أضيفت إلى المفضلة</string>
     <string name="favorite_removed">أزيلت من المفضلة</string>
-    <string name="search_coming_soon">البحث في المرحلة التالية</string>
+    <string name="search_title">بحث في الموقع</string>
+    <string name="search_hint">اكتب كلمات البحث</string>
+    <string name="search_go">بحث</string>
+    <string name="search_space">مسافة</string>
+    <string name="search_delete">حذف</string>
+    <string name="search_voice">صوت</string>
+    <string name="search_recent">آخر عمليات البحث</string>
+    <string name="search_min_chars">أدخل حرفين على الأقل</string>
+    <string name="voice_unavailable">التعرف على الصوت غير متوفر على هذا الجهاز</string>
+    <string name="voice_prompt">قل كلمات البحث</string>
 
     <string name="section_primary">التعليم الابتدائي</string>
     <string name="section_middle">التعليم المتوسط</string>

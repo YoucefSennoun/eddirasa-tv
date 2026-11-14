@@ -9,8 +9,10 @@ object AppPrefs {
     private const val KEY_RECENT = "recent"
     private const val KEY_FAVORITES = "favorites"
     private const val KEY_TEXT_ZOOM = "text_zoom"
+    private const val KEY_SEARCHES = "searches"
     private const val MAX_RECENT = 5
     private const val MAX_FAVORITES = 20
+    private const val MAX_SEARCHES = 10
 
     const val DEFAULT_TEXT_ZOOM = 135
     const val MIN_TEXT_ZOOM = 80
@@ -33,6 +35,26 @@ object AppPrefs {
         prefs(context).edit()
             .putInt(KEY_TEXT_ZOOM, value.coerceIn(MIN_TEXT_ZOOM, MAX_TEXT_ZOOM))
             .apply()
+    }
+
+    fun searches(context: Context): List<String> {
+        val raw = prefs(context).getString(KEY_SEARCHES, null) ?: return emptyList()
+        return try {
+            val array = JSONArray(raw)
+            (0 until array.length()).mapNotNull { i ->
+                array.optString(i).takeIf { it.isNotBlank() }
+            }
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    fun addSearch(context: Context, query: String) {
+        val items = searches(context).filterNot { it == query }.toMutableList()
+        items.add(0, query)
+        val array = JSONArray()
+        items.take(MAX_SEARCHES).forEach { array.put(it) }
+        prefs(context).edit().putString(KEY_SEARCHES, array.toString()).apply()
     }
 
     fun addRecent(context: Context, url: String, title: String) {

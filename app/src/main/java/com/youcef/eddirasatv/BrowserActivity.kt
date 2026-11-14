@@ -27,6 +27,7 @@ import android.webkit.WebViewClient
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import java.util.Locale
@@ -56,6 +57,16 @@ class BrowserActivity : AppCompatActivity() {
     }
 
     private val hideRunnable = Runnable { cursorView.visibility = View.INVISIBLE }
+
+    private val searchLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                result.data?.getStringExtra(SearchActivity.EXTRA_QUERY_URL)?.let { url ->
+                    webView.loadUrl(url)
+                    showCursor()
+                }
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -435,7 +446,7 @@ class BrowserActivity : AppCompatActivity() {
             showCursor()
         })
         dialog.findViewById<TextView>(R.id.menuSearch).setOnClickListener(action {
-            Toast.makeText(this, R.string.search_coming_soon, Toast.LENGTH_SHORT).show()
+            searchLauncher.launch(SearchActivity.intent(this))
         })
         favoriteItem.setOnClickListener(action {
             val url = webView.url
