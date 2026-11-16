@@ -54,8 +54,8 @@ Never commit the keystore or its passwords.
 
 | Key | Home | Browser | PDF viewer |
 |---|---|---|---|
-| D-pad | Move focus | Move cursor / scroll | Page turn / scroll |
-| OK | Open | Click | Toggle zoom |
+| D-pad | Move focus | Move highlight between elements | Page turn / scroll |
+| OK | Open | Open highlighted element | Toggle zoom |
 | BACK | Exit dialog | Back | Close |
 | MENU | — | Quick menu | Page / zoom menu |
 

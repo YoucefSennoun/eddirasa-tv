@@ -11,7 +11,6 @@ import java.io.File
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var textSizeRow: TextView
-    private lateinit var cursorRow: TextView
     private lateinit var pdfZoomRow: TextView
     private lateinit var pdfDirectionRow: TextView
 
@@ -21,14 +20,12 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
 
         textSizeRow = findViewById(R.id.settingsTextSize)
-        cursorRow = findViewById(R.id.settingsCursor)
         pdfZoomRow = findViewById(R.id.settingsPdfZoom)
         pdfDirectionRow = findViewById(R.id.settingsPdfDirection)
         val clearCacheRow = findViewById<TextView>(R.id.settingsClearCache)
         val clearHistoryRow = findViewById<TextView>(R.id.settingsClearHistory)
 
         bind(textSizeRow) { delta -> cycleTextSize(delta) }
-        bind(cursorRow) { delta -> cycleCursor(delta) }
         bind(pdfZoomRow) { delta -> cyclePdfZoom(delta) }
         bind(pdfDirectionRow) { delta -> togglePdfDirection(delta) }
 
@@ -74,12 +71,6 @@ class SettingsActivity : AppCompatActivity() {
         refresh()
     }
 
-    private fun cycleCursor(delta: Int) {
-        val next = (AppPrefs.cursorSpeed(this) + delta + CURSOR_COUNT) % CURSOR_COUNT
-        AppPrefs.setCursorSpeed(this, next)
-        refresh()
-    }
-
     private fun cyclePdfZoom(delta: Int) {
         val next = (AppPrefs.pdfZoom(this) + delta + PDF_ZOOM_COUNT) % PDF_ZOOM_COUNT
         AppPrefs.setPdfZoom(this, next)
@@ -94,10 +85,6 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun refresh() {
         textSizeRow.text = getString(R.string.settings_text_size, AppPrefs.textZoom(this))
-        cursorRow.text = getString(
-            R.string.settings_cursor,
-            getString(cursorLabel(AppPrefs.cursorSpeed(this)))
-        )
         pdfZoomRow.text = getString(
             R.string.settings_pdf_zoom,
             getString(pdfZoomLabel(AppPrefs.pdfZoom(this)))
@@ -106,12 +93,6 @@ class SettingsActivity : AppCompatActivity() {
             R.string.settings_pdf_direction,
             getString(if (AppPrefs.pdfRtl(this)) R.string.pdf_dir_rtl else R.string.pdf_dir_ltr)
         )
-    }
-
-    private fun cursorLabel(value: Int): Int = when (value) {
-        0 -> R.string.cursor_slow
-        2 -> R.string.cursor_fast
-        else -> R.string.cursor_normal
     }
 
     private fun pdfZoomLabel(value: Int): Int = when (value) {
@@ -134,7 +115,6 @@ class SettingsActivity : AppCompatActivity() {
 
     companion object {
         private val TEXT_ZOOMS = intArrayOf(100, 115, 135, 150, 175, 200)
-        private const val CURSOR_COUNT = 3
         private const val PDF_ZOOM_COUNT = 3
     }
 }

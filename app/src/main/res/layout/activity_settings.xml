@@ -31,10 +31,6 @@
             android:layout_marginTop="22dp" />
 
         <TextView
-            android:id="@+id/settingsCursor"
-            style="@style/MenuItem" />
-
-        <TextView
             android:id="@+id/settingsPdfZoom"
             style="@style/MenuItem" />
 

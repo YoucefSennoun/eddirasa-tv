@@ -57,8 +57,8 @@ Build a lightweight Android app that makes **https://eddirasa.com/** (Algerian e
 
 | Key | Home screen | Browser screen | PDF viewer |
 |---|---|---|---|
-| D-pad arrows | Move focus between tiles | Move virtual cursor (hold = faster); at screen edge → scroll page | LEFT/RIGHT = previous/next page, UP/DOWN = scroll inside page |
-| OK / ENTER | Open tile | Click at cursor position | Toggle zoom (fit width ↔ 150%) |
+| D-pad arrows | Move focus between tiles | Move the highlight between interactive elements (auto-scrolls) | LEFT/RIGHT = previous/next page, UP/DOWN = scroll inside page |
+| OK / ENTER | Open tile | Open the highlighted element | Toggle zoom (fit width ↔ 150%) |
 | BACK | Exit confirm dialog | Go back in page history; if none → Home | Close PDF, return to page |
 | MENU | — | Open quick menu (Home, Reload, Zoom +/−, Search, Favorites) | Page jump / zoom menu |
 | Channel/Page Up/Down (if exist) | — | Scroll page up/down | Previous/next page |
@@ -116,18 +116,18 @@ Build a lightweight Android app that makes **https://eddirasa.com/** (Algerian e
 
 **Done when:** every section of the site opens and BACK works as in the table.
 
-## PHASE 4 — Virtual cursor (the key feature)
+## PHASE 4 — Highlight navigation (the key feature)
 
-A website is made for a mouse; on a remote we need a pointer.
+A website is made for a mouse; on a remote we navigate element by element.
 
-- [ ] Draw a cursor overlay (round arrow/circle, 32dp, white with black border) above the WebView.
-- [ ] D-pad moves the cursor; speed starts at 12 px/step and accelerates while the key is held (up to ~60 px/step), resets on key up.
-- [ ] When the cursor touches the top/bottom edge and the user keeps pressing UP/DOWN → scroll the page (`webView.scrollBy`).
-- [ ] OK/ENTER → inject a real click: dispatch `MotionEvent` ACTION_DOWN + ACTION_UP at the cursor position to the WebView.
-- [ ] Cursor auto-hides after 4 s without movement; shows again on any key.
-- [ ] **Smart snap (nice to have):** when the cursor is close (<40px) to a link/button, snap to its center. Implement with `evaluateJavascript` using `document.elementFromPoint`.
+- [x] Inject a JavaScript engine (`WebNav.SCRIPT`) into the WebView after every page load.
+- [x] The engine collects the page's interactive elements (`a[href]`, `button`, `input`, `select`, `textarea`, `[role=button]`, `[onclick]`, `[tabindex]`).
+- [x] A green highlight box is drawn as a `position:fixed` overlay so it is never clipped and tracks the element while scrolling.
+- [x] D-pad picks the nearest element in the pressed direction (geometry score) and scrolls it into view.
+- [x] OK/ENTER clicks the highlighted element (programmatic `click()`), so ads and the "تحقق مجددًا" ad-wall keep working.
+- [x] The first interactive element is highlighted automatically when a page finishes loading.
+- [x] MENU key opens quick menu: الرئيسية (Home) • إعادة التحميل (Reload) • تكبير/تصغير (Zoom +/−) • بحث (Search) • أضف للمفضلة (Add favorite) • خروج (Exit).
 - [ ] Text fields: when OK is pressed on an `input/textarea`, open the in-app keyboard (Phase 5).
-- [ ] MENU key opens quick menu: الرئيسية (Home) • إعادة التحميل (Reload) • تكبير/تصغير (Zoom +/−) • بحث (Search) • أضف للمفضلة (Add favorite) • خروج (Exit).
 
 **Done when:** user can open any link, scroll, and press buttons (incl. the "تحقق مجددًا" ad-wall button) using only the remote.
 
@@ -162,7 +162,7 @@ TV boxes often have no keyboard and the system IME may be missing or not D-pad f
 ## PHASE 7 — Ads, popups, and stability
 
 - [ ] Do not block ads. Make sure ad iframes don't steal D-pad focus or open external apps/redirect loops.
-- [ ] Handle the "ad-block detected" overlay: it must be dismissable by the cursor.
+- [ ] Handle the "ad-block detected" overlay: it must be dismissable by the highlight.
 - [ ] Block auto-redirects to non-http(s) schemes.
 - [ ] SSL errors: do not silently proceed; show an Arabic error page.
 - [ ] Add `onRenderProcessGone` handling to recover from WebView crash without closing the app.
@@ -175,7 +175,7 @@ TV boxes often have no keyboard and the system IME may be missing or not D-pad f
 - [ ] First-run help overlay (once): shows the remote key mapping in Arabic with arrows icons. Re-open from MENU → "مساعدة".
 - [ ] Favorites screen (add/remove with MENU on any page).
 - [ ] "Continue where I stopped" tile on Home (last page opened).
-- [ ] Settings screen (D-pad friendly): text size, cursor speed, default zoom, PDF direction, clear cache, clear history.
+- [ ] Settings screen (D-pad friendly): text size, default zoom, PDF direction, clear cache, clear history.
 - [ ] Exit confirmation dialog on Home with BACK: "هل تريد الخروج؟" [نعم] [لا] (focus on "لا" by default).
 - [ ] Keep screen on while using (`FLAG_KEEP_SCREEN_ON`).
 - [ ] Every focusable item has a visible focus state. No dead-ends where focus gets trapped.
@@ -189,7 +189,7 @@ Test on the real device (Mortal TX1-S, Android 10) with the remote only:
 - [ ] Home → each tile loads.
 - [ ] Open a level → subject → a PDF exam → read all pages → BACK to the page.
 - [ ] Search using the built-in keyboard.
-- [ ] Open the Classrooms/Questions pages and click around with the cursor.
+- [ ] Open the Classrooms/Questions pages and click around with the highlight.
 - [ ] Leave the app running 30 min: no crash, no RAM kill.
 - [ ] Rotate/sleep/wake the box: app recovers.
 - [ ] Fix bugs, bump `versionName` to `1.0.0`, run the release workflow, publish a GitHub Release with the signed APK and a short Arabic+English README with screenshots.

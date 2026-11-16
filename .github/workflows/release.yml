@@ -49,6 +49,9 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: ./gradlew assembleRelease --stacktrace --no-daemon
 
+      - name: Rename APK
+        run: cp app/build/outputs/apk/release/app-release.apk eddirassa.apk
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -57,11 +60,11 @@ jobs:
           body: |
             نسخة التلفاز من موقع الدراسة — تعمل بالريموت فقط.
 
-            **التثبيت:** نزّل `app-release.apk` وثبّته على أندرويد 7 أو أحدث
+            **التثبيت:** نزّل `eddirassa.apk` وثبّته على أندرويد 7 أو أحدث
             (يفضّل Android TV). شغّل التطبيق واختر قسماً بالريموت.
 
             Signed TV build of eddirasa.com. Remote-only navigation.
-            **Install:** download `app-release.apk` and sideload it on Android 7+
+            **Install:** download `eddirassa.apk` and sideload it on Android 7+
             (Android TV recommended).
-          files: app/build/outputs/apk/release/app-release.apk
+          files: eddirassa.apk
           fail_on_unmatched_files: true

@@ -11,7 +11,6 @@ object AppPrefs {
     private const val KEY_TEXT_ZOOM = "text_zoom"
     private const val KEY_SEARCHES = "searches"
     private const val KEY_PDF_RTL = "pdf_rtl"
-    private const val KEY_CURSOR_SPEED = "cursor_speed"
     private const val KEY_PDF_ZOOM = "pdf_zoom"
     private const val KEY_LAST_URL = "last_url"
     private const val KEY_LAST_TITLE = "last_title"
@@ -21,9 +20,6 @@ object AppPrefs {
     private const val MAX_SEARCHES = 10
 
     const val DEFAULT_TEXT_ZOOM = 135
-    const val DEFAULT_CURSOR_SPEED = 1
-    const val MIN_CURSOR_SPEED = 0
-    const val MAX_CURSOR_SPEED = 2
     const val MIN_TEXT_ZOOM = 80
     const val MAX_TEXT_ZOOM = 200
 
@@ -70,16 +66,6 @@ object AppPrefs {
 
     fun setPdfRtl(context: Context, value: Boolean) {
         prefs(context).edit().putBoolean(KEY_PDF_RTL, value).apply()
-    }
-
-    fun cursorSpeed(context: Context): Int =
-        prefs(context).getInt(KEY_CURSOR_SPEED, DEFAULT_CURSOR_SPEED)
-            .coerceIn(MIN_CURSOR_SPEED, MAX_CURSOR_SPEED)
-
-    fun setCursorSpeed(context: Context, value: Int) {
-        prefs(context).edit()
-            .putInt(KEY_CURSOR_SPEED, value.coerceIn(MIN_CURSOR_SPEED, MAX_CURSOR_SPEED))
-            .apply()
     }
 
     fun pdfZoom(context: Context): Int =

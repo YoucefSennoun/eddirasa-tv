@@ -22,13 +22,6 @@
         android:progressTint="@color/brand_green"
         android:visibility="gone" />
 
-    <com.youcef.eddirasatv.CursorView
-        android:id="@+id/cursorView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="false"
-        android:focusable="false" />
-
     <LinearLayout
         android:id="@+id/errorOverlay"
         android:layout_width="match_parent"
