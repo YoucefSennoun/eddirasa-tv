@@ -24,11 +24,6 @@
         android:text="@string/menu_settings" />
 
     <TextView
-        android:id="@+id/homeMenuFavorites"
-        style="@style/MenuItem"
-        android:text="@string/home_favorites" />
-
-    <TextView
         android:id="@+id/homeMenuHelp"
         style="@style/MenuItem"
         android:text="@string/menu_help" />

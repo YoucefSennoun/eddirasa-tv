@@ -44,11 +44,6 @@
         android:text="@string/menu_search" />
 
     <TextView
-        android:id="@+id/menuFavorite"
-        style="@style/MenuItem"
-        android:text="@string/menu_add_favorite" />
-
-    <TextView
         android:id="@+id/menuHelp"
         style="@style/MenuItem"
         android:text="@string/menu_help" />

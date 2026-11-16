@@ -59,6 +59,17 @@ Never commit the keystore or its passwords.
 | BACK | Exit dialog | Back | Close |
 | MENU | — | Quick menu | Page / zoom menu |
 
+## Features
+
+- Remote-only navigation: the D-pad moves a highlight between the page's links and
+  buttons (no mouse pointer), OK activates the highlighted element, MENU opens the
+  quick menu.
+- Minimal home screen: a single grid of the site's sections plus search.
+- Built-in PDF downloader for `.pdf` links, with an in-app PDF viewer.
+- Fullscreen support so the site's own viewer (and PDF pages) can expand.
+- Hides the site's "حمّل التطبيق من Google Play" app-promo overlay so the Play
+  Store app is not pushed; Google ads on the site are left untouched.
+
 ## Privacy
 
 The app only loads the public website. It does not copy, scrape, or re-host content,

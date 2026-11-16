@@ -207,6 +207,20 @@ Test on the real device (Mortal TX1-S, Android 10) with the remote only:
 - This app only loads the public website; it does not copy, scrape, or re-host the site's content and keeps the site's ads working. Consider messaging the site owner (contact page: https://eddirasa.com/contact/) if the app will be shared publicly.
 - Future ideas (NOT in v1): offline downloads of favorite PDFs, text-to-speech for lessons, parental "kids mode", Arabic voice search.
 
+## 8. Post-v1 changes (applied)
+
+- **Replaced the pointer cursor with D-pad highlight navigation.** The `CursorView`
+  and the cursor-speed setting were removed; `WebNav` now moves a green highlight
+  between the page's interactive elements and OK clicks the highlighted one.
+- **Simplified the home screen** to a single grid of the site's sections plus search.
+  Removed the favorites screen (`FavoritesActivity`), the "continue where I stopped"
+  tile, and the recently-visited row, along with their preferences.
+- **Fullscreen fix:** added `WebChromeClient.onShowCustomView`/`onHideCustomView` so
+  the site's own viewer (and PDF pages) can expand instead of silently doing nothing.
+- **App-promo overlay blocked:** the "حمّل التطبيق من Google Play" modal and the
+  anti-adblock "support gate" are hidden (CSS + MutationObserver) and the
+  `app-promo.js` script is blocked at the network layer. Google ads are untouched.
+
 ---
 
 ## Prompt to paste to the agent at the start of each phase

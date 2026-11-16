@@ -9,9 +9,9 @@
     android:focusable="false"
     android:layoutDirection="rtl"
     android:paddingStart="24dp"
-    android:paddingTop="20dp"
+    android:paddingTop="22dp"
     android:paddingEnd="24dp"
-    android:paddingBottom="20dp"
+    android:paddingBottom="22dp"
     android:scrollbars="none">
 
     <LinearLayout
@@ -24,93 +24,22 @@
             android:layout_height="wrap_content"
             android:text="@string/app_name"
             android:textColor="@color/brand_green"
-            android:textSize="40sp"
+            android:textSize="42sp"
             android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
+            android:layout_marginBottom="20dp"
             android:text="@string/home_subtitle"
             android:textColor="@color/text_secondary"
             android:textSize="22sp" />
 
         <LinearLayout
-            android:id="@+id/continueBlock"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/home_continue"
-                android:textColor="@color/text_light"
-                android:textSize="26sp"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:id="@+id/continueRow"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:clipChildren="false"
-                android:orientation="horizontal" />
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/home_recent"
-            android:textColor="@color/text_light"
-            android:textSize="26sp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:id="@+id/recentRow"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:clipChildren="false"
-            android:clipToPadding="false"
-            android:orientation="horizontal" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
-            android:text="@string/home_favorites"
-            android:textColor="@color/text_light"
-            android:textSize="26sp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:id="@+id/favoritesRow"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:clipChildren="false"
-            android:clipToPadding="false"
-            android:orientation="horizontal" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
-            android:text="@string/home_sections"
-            android:textColor="@color/text_light"
-            android:textSize="26sp"
-            android:textStyle="bold" />
-
-        <LinearLayout
             android:id="@+id/gridContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:clipChildren="false"
             android:clipToPadding="false"
             android:orientation="vertical" />
@@ -118,8 +47,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginTop="16dp"
             android:gravity="center"
             android:text="@string/home_hint"
             android:textColor="@color/text_secondary"

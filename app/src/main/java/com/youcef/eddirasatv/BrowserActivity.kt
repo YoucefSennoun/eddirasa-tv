@@ -24,6 +24,7 @@ import android.webkit.SslErrorHandler
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -33,6 +34,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.IOException
 import java.net.HttpURLConnection
@@ -46,6 +48,10 @@ class BrowserActivity : AppCompatActivity() {
     private lateinit var errorOverlay: View
     private lateinit var retryButton: TextView
     private lateinit var errorMessage: TextView
+    private lateinit var fullscreenContainer: ViewGroup
+
+    private var customView: View? = null
+    private var customViewCallback: WebChromeClient.CustomViewCallback? = null
 
     private var failedUrl: String? = null
     private var lastUrl: String? = null
@@ -76,6 +82,7 @@ class BrowserActivity : AppCompatActivity() {
         errorOverlay = findViewById(R.id.errorOverlay)
         retryButton = findViewById(R.id.retryButton)
         errorMessage = findViewById(R.id.errorMessage)
+        fullscreenContainer = findViewById(R.id.fullscreenContainer)
 
         configureWebView(webView)
 
@@ -116,7 +123,7 @@ class BrowserActivity : AppCompatActivity() {
                 val scheme = uri.scheme?.lowercase()
                 if (scheme == "http" || scheme == "https") {
                     if (isInternal(uri)) {
-                        if (isPdfUrl(uri)) {
+                        if (isPdfUrl(uri) && request.isForMainFrame) {
                             startPdfDownload(uri.toString())
                             return true
                         }
@@ -125,6 +132,21 @@ class BrowserActivity : AppCompatActivity() {
                 }
                 showExternalBlocked()
                 return true
+            }
+
+            override fun shouldInterceptRequest(
+                view: WebView?,
+                request: WebResourceRequest?
+            ): WebResourceResponse? {
+                val url = request?.url?.toString() ?: return null
+                if (isBlockedAdScript(url)) {
+                    return WebResourceResponse(
+                        "application/javascript",
+                        "utf-8",
+                        ByteArrayInputStream(ByteArray(0))
+                    )
+                }
+                return null
             }
 
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
@@ -141,9 +163,6 @@ class BrowserActivity : AppCompatActivity() {
                 if (errorOverlay.visibility != View.VISIBLE && url != null &&
                     url.startsWith("http")
                 ) {
-                    val title = view?.title?.takeIf { it.isNotBlank() } ?: url
-                    AppPrefs.addRecent(this@BrowserActivity, url, title)
-                    AppPrefs.setLastPage(this@BrowserActivity, url, title)
                     injectNavigation()
                 }
             }
@@ -229,7 +248,45 @@ class BrowserActivity : AppCompatActivity() {
                 resultMsg?.sendToTarget()
                 return true
             }
+
+            override fun onShowCustomView(view: View?, callback: CustomViewCallback?) {
+                if (view == null || customView != null) {
+                    callback?.onCustomViewHidden()
+                    return
+                }
+                customView = view
+                customViewCallback = callback
+                fullscreenContainer.addView(
+                    view,
+                    ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                    )
+                )
+                fullscreenContainer.visibility = View.VISIBLE
+                webView.visibility = View.INVISIBLE
+                progressBar.visibility = View.GONE
+                view.requestFocus()
+            }
+
+            override fun onHideCustomView() {
+                exitFullscreen()
+            }
         }
+    }
+
+    private fun exitFullscreen() {
+        val view = customView ?: return
+        customView = null
+        fullscreenContainer.removeView(view)
+        fullscreenContainer.visibility = View.GONE
+        webView.visibility = View.VISIBLE
+        webView.requestFocus()
+        try {
+            customViewCallback?.onCustomViewHidden()
+        } catch (ignored: Exception) {
+        }
+        customViewCallback = null
     }
 
     private fun isPdfUrl(uri: Uri): Boolean =
@@ -421,6 +478,9 @@ class BrowserActivity : AppCompatActivity() {
         return host == "eddirasa.com" || host.endsWith(".eddirasa.com")
     }
 
+    private fun isBlockedAdScript(url: String): Boolean =
+        url.contains("app-promo.js", ignoreCase = true)
+
     private fun showExternalBlocked() {
         Toast.makeText(this, R.string.external_link_blocked, Toast.LENGTH_SHORT).show()
     }
@@ -481,6 +541,7 @@ class BrowserActivity : AppCompatActivity() {
     }
 
     private fun injectNavigation() {
+        webView.evaluateJavascript(WebNav.BLOCK_SCRIPT, null)
         webView.evaluateJavascript(
             WebNav.SCRIPT + "\ntry{window.__ed_first&&window.__ed_first();}catch(e){}",
             null
@@ -542,13 +603,6 @@ class BrowserActivity : AppCompatActivity() {
             decorView.layoutDirection = View.LAYOUT_DIRECTION_RTL
         }
 
-        val currentUrl = webView.url
-        val favoriteItem = dialog.findViewById<TextView>(R.id.menuFavorite)
-        val alreadyFavorite = currentUrl != null && AppPrefs.isFavorite(this, currentUrl)
-        favoriteItem.text = getString(
-            if (alreadyFavorite) R.string.menu_remove_favorite else R.string.menu_add_favorite
-        )
-
         fun action(block: () -> Unit): View.OnClickListener = View.OnClickListener {
             dialog.dismiss()
             block()
@@ -568,18 +622,6 @@ class BrowserActivity : AppCompatActivity() {
         })
         dialog.findViewById<TextView>(R.id.menuSearch).setOnClickListener(action {
             searchLauncher.launch(SearchActivity.intent(this))
-        })
-        favoriteItem.setOnClickListener(action {
-            val url = webView.url
-            if (url != null) {
-                val title = webView.title?.takeIf { it.isNotBlank() } ?: url
-                val added = AppPrefs.toggleFavorite(this, url, title)
-                Toast.makeText(
-                    this,
-                    if (added) R.string.favorite_added else R.string.favorite_removed,
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
         })
         dialog.findViewById<TextView>(R.id.menuHelp).setOnClickListener(action {
             UiDialogs.showHelp(this)
@@ -605,6 +647,10 @@ class BrowserActivity : AppCompatActivity() {
 
     @Deprecated("Deprecated in API 33, matches targetSdk 29 behaviour")
     override fun onBackPressed() {
+        if (customView != null) {
+            exitFullscreen()
+            return
+        }
         if (webView.canGoBack()) {
             webView.goBack()
         } else {

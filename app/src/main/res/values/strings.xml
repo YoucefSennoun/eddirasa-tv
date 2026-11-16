@@ -2,17 +2,9 @@
 <resources>
     <string name="app_name">الدراسة TV</string>
     <string name="home_subtitle">بوابة الدراسة على التلفاز</string>
-    <string name="home_recent">آخر ما زرته</string>
-    <string name="home_favorites">المفضلة</string>
-    <string name="home_sections">الأقسام</string>
     <string name="home_hint">استخدم أسهم الريموت للتنقل، و OK للفتح</string>
-    <string name="home_continue">متابعة من حيث توقفت</string>
     <string name="menu_help">مساعدة</string>
     <string name="menu_settings">الإعدادات</string>
-    <string name="favorites_title">المفضلة</string>
-    <string name="favorites_hint">OK لفتح الصفحة، MENU لحذفها من المفضلة</string>
-    <string name="favorites_empty">لا توجد صفحات محفوظة</string>
-    <string name="favorites_removed">حُذفت من المفضلة</string>
     <string name="exit_question">هل تريد الخروج؟</string>
     <string name="yes">نعم</string>
     <string name="no">لا</string>
@@ -28,7 +20,7 @@
     <string name="settings_pdf_zoom">تكبير PDF الافتراضي: %1$s</string>
     <string name="settings_pdf_direction">اتجاه صفحات PDF: %1$s</string>
     <string name="settings_clear_cache">مسح ذاكرة التخزين المؤقت</string>
-    <string name="settings_clear_history">مسح السجل</string>
+    <string name="settings_clear_history">مسح سجل البحث</string>
     <string name="settings_hint">OK للتغيير، وأسهم اليسار/اليمين للتعديل</string>
     <string name="settings_cleared">تم المسح</string>
     <string name="zoom_fit">ملء العرض</string>
@@ -37,8 +29,6 @@
     <string name="pdf_dir_rtl">من اليمين إلى اليسار</string>
     <string name="pdf_dir_ltr">من اليسار إلى اليمين</string>
     <string name="splash_tagline">بوابة الدراسة على التلفاز</string>
-    <string name="empty_recent">لا يوجد سجل بعد</string>
-    <string name="empty_favorites">لا توجد مفضلة بعد</string>
     <string name="error_title">تعذر تحميل الصفحة</string>
     <string name="error_message">تحقق من اتصال الإنترنت ثم حاول مرة أخرى.</string>
     <string name="error_ssl">تعذر إنشاء اتصال آمن بالموقع.</string>
@@ -51,12 +41,8 @@
     <string name="menu_reload">إعادة التحميل</string>
     <string name="menu_home">الرئيسية</string>
     <string name="menu_search">بحث</string>
-    <string name="menu_add_favorite">أضف للمفضلة</string>
-    <string name="menu_remove_favorite">إزالة من المفضلة</string>
     <string name="menu_exit">خروج</string>
     <string name="menu_zoom_value">حجم النص: %1$d%%</string>
-    <string name="favorite_added">أضيفت إلى المفضلة</string>
-    <string name="favorite_removed">أزيلت من المفضلة</string>
     <string name="search_title">بحث في الموقع</string>
     <string name="search_hint">اكتب كلمات البحث</string>
     <string name="search_go">بحث</string>

@@ -11,6 +11,50 @@ package com.youcef.eddirasatv
  */
 object WebNav {
 
+    /**
+     * Hides the site's intrusive overlays: the "حمّل التطبيق من Google Play"
+     * app-promo modal and the anti-adblock "support gate". The promo script is
+     * also blocked at the network layer, this is a belt-and-braces backup for
+     * nodes injected later.
+     */
+    const val BLOCK_SCRIPT = """
+(function () {
+  if (window.__edAds) { return; }
+  window.__edAds = true;
+
+  var CSS = '#eddirasaAppPromo,.ed-app-promo,#eddirasaSupportGate,' +
+    '.ed-support-gate{display:none !important;visibility:hidden !important;}';
+  try {
+    var style = document.createElement('style');
+    style.setAttribute('data-ed', '1');
+    style.textContent = CSS;
+    (document.head || document.documentElement).appendChild(style);
+  } catch (e) {}
+
+  var SELECTORS = ['#eddirasaAppPromo', '.ed-app-promo',
+    '#eddirasaSupportGate', '.ed-support-gate'];
+
+  function kill() {
+    for (var i = 0; i < SELECTORS.length; i++) {
+      var nodes = document.querySelectorAll(SELECTORS[i]);
+      for (var j = 0; j < nodes.length; j++) {
+        try { nodes[j].parentNode.removeChild(nodes[j]); } catch (e) {}
+      }
+    }
+    try {
+      document.documentElement.style.overflow = '';
+      if (document.body) { document.body.style.overflow = ''; }
+    } catch (e) {}
+  }
+
+  kill();
+  try {
+    new MutationObserver(kill).observe(document.documentElement,
+      {childList: true, subtree: true});
+  } catch (e) {}
+})();
+"""
+
     const val SCRIPT = """
 (function () {
   if (window.__ed) { return; }

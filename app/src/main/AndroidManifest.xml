@@ -46,12 +46,6 @@
             android:screenOrientation="landscape" />
 
         <activity
-            android:name=".FavoritesActivity"
-            android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout|uiMode"
-            android:exported="false"
-            android:screenOrientation="landscape" />
-
-        <activity
             android:name=".SearchActivity"
             android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout|uiMode"
             android:exported="false"

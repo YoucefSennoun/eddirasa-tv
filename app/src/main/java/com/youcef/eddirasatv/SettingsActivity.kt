@@ -31,7 +31,7 @@ class SettingsActivity : AppCompatActivity() {
 
         clearCacheRow.setOnClickListener { clearCaches() }
         clearHistoryRow.setOnClickListener {
-            AppPrefs.clearHistory(this)
+            AppPrefs.clearSearches(this)
             Toast.makeText(this, R.string.settings_cleared, Toast.LENGTH_SHORT).show()
             refresh()
         }
