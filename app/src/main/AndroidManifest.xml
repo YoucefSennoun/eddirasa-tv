@@ -21,7 +21,7 @@
         android:usesCleartextTraffic="false">
 
         <activity
-            android:name=".SplashActivity"
+            android:name=".HomeActivity"
             android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout|uiMode"
             android:exported="true"
             android:screenOrientation="landscape">
@@ -34,31 +34,13 @@
         </activity>
 
         <activity
-            android:name=".HomeActivity"
-            android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout|uiMode"
-            android:exported="false"
-            android:screenOrientation="landscape" />
-
-        <activity
-            android:name=".SettingsActivity"
-            android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout|uiMode"
-            android:exported="false"
-            android:screenOrientation="landscape" />
-
-        <activity
-            android:name=".SearchActivity"
+            android:name=".ListActivity"
             android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout|uiMode"
             android:exported="false"
             android:screenOrientation="landscape" />
 
         <activity
             android:name=".PdfViewerActivity"
-            android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout|uiMode"
-            android:exported="false"
-            android:screenOrientation="landscape" />
-
-        <activity
-            android:name=".BrowserActivity"
             android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout|uiMode"
             android:exported="false"
             android:screenOrientation="landscape" />
